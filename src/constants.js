@@ -1,4 +1,5 @@
-import { akGridSize } from '@atlaskit/util-shared-styles';
+import {akGridSize} from '@atlaskit/util-shared-styles';
+
 const gridSizeInt = parseInt(akGridSize, 10);
 
-export { gridSizeInt };
+export {gridSizeInt};
