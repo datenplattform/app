@@ -25,8 +25,12 @@
     "@atlaskit/navigation": "^27.0.4",
     "@atlaskit/page": "^5.0.5",
     "@atlaskit/util-shared-styles": "^2.10.6",
+    "chart.js": "^2.7.1",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
+    "react-chartjs": "^1.2.0",
+    "react-chartjs-2": "^2.7.0",
+    "react-d3-components": "^0.8.0",
     "react-dom": "^16.2.0",
     "react-router": "^3.2.0",
     "react-router-dom": "^4.2.2"
