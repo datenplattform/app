@@ -9,38 +9,64 @@ export default class CurrencyPage extends PureComponent {
     super(props);
 
     this.state = {
-      data: [],
-      isLoading: true,
+      keys: [],
+      values: [],
+      predictionKeys: [],
+      predictionValues: [],
+      isLoading: false,
       error: null,
     };
   }
 
   componentDidMount() {
-    this.fetchCurrency(this.props.routeParams.currency);
-  }
+//    this.fetchCurrency(this.props.routeParams.currency);
 
-  componentDidUpdate() {
-    console.log('componentDidUpdate');
-  }
+    let url = (window.location.protocol === 'https:' ? 'wss:' : 'ws:') + '//' + window.location.hostname + ':3333';
+    let socket = new WebSocket(url);
+    socket.onopen = () => {
+      console.log("connected.");
+    };
+    socket.onerror = error => {
+      console.error(error);
+    };
+    socket.onmessage = message => {
+      let data = message.data;
+      try {
+        data = JSON.parse(data);
 
-  fetchCurrency(currency) {
-    this.setState({isLoading: true});
+        if (data.hasOwnProperty('trade')) {
+          this.setState(prevState => ({
+            keys: [...prevState.keys, data.trade.timestamp],
+            values: [...prevState.values, data.trade.price]
+          }));
+        }
 
-    let options = {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        if (data.hasOwnProperty('ctrades')) {
+          this.setState(prevState => ({
+            predictionKeys: data.ctrades.map(item => item.timestamp),
+            predictionValues: data.ctrades.map(item => item.price)
+          }));
+        }
+      } catch (error) {
+        return console.error("failed to parse message", data, error);
       }
     };
-    fetch('http://localhost:5000/api/rest/currencies/' + currency + '.json', options)
-      .then(response => response.json())
-      .then(data => this.setState({data: data, isLoading: false}))
-      .catch(error => this.setState({error, isLoading: false}));
+  }
+
+  createConfig(label, keys, values) {
+    return {
+      labels: keys,
+      datasets: [
+        {
+          label: label,
+          data: values
+        }
+      ]
+    }
   }
 
   render() {
-    const {data, isLoading, error} = this.state;
+    const {keys, values, predictionKeys, predictionValues, isLoading, error} = this.state;
 
     if (error) {
       return <p>{error.message}</p>;
@@ -50,47 +76,31 @@ export default class CurrencyPage extends PureComponent {
       return <p>Loading ...</p>;
     }
 
-    let labels = data.map(item => {
-      return item.Date;
-    });
-    let open = data.map(item => {
-      return item.Open;
-    });
-    let close = data.map(item => {
-      return item.Close;
-    });
-    let volatility = data.map(item => {
-      return item.Volatility;
-    });
+    let currency = this.props.routeParams.currency;
 
-    const config = {
-      labels: labels,
+    let config = {
+      labels: [...keys, ...predictionKeys],
       datasets: [
         {
-          label: 'Open',
-          fill: false,
-          borderColor: 'rgba(75,192,192,1)',
-          data: open
+          label: 'Values',
+          data: values
         },
         {
-          label: 'Close',
-          fill: false,
-          borderColor: 'rgba(25,92,92,1)',
-          data: close
+          label: 'Predicted',
+          borderColor: 'rgba(255,35,35,1)',
+          data: [...values, ...predictionValues]
         }
       ]
     };
 
-    let currency = this.props.routeParams.currency;
-
     return (
       <ContentWrapper>
         <PageTitle>{currency.charAt(0).toUpperCase() + currency.slice(1)}</PageTitle>
-        <PageSubtitle>Aktueller Kurs</PageSubtitle>
         <Line data={config}/>
+        <PageSubtitle>Aktueller Kurs</PageSubtitle>
+        <Line data={this.createConfig('Open', keys, values)}/>
         <PageSubtitle>Vorhersage</PageSubtitle>
-        <Line
-          data={{label: labels, datasets: [{label: 'Volatility', data: volatility, fill: true, lineTension: 0.5}]}}/>
+        <Line data={this.createConfig('Open', predictionKeys, predictionValues)}/>
       </ContentWrapper>
     );
   }
