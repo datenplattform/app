@@ -33,7 +33,7 @@ export default class CurrencyPage extends PureComponent {
         'Content-Type': 'application/json'
       }
     };
-    fetch('http://localhost:5000/api/rest/currencies/' + this.props.routeParams.currency + '.json', options)
+    fetch('http://localhost:5000/api/rest/currencies/' + currency + '.json', options)
       .then(response => response.json())
       .then(data => this.setState({data: data, isLoading: false}))
       .catch(error => this.setState({error, isLoading: false}));
