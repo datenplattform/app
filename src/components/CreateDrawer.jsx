@@ -11,56 +11,56 @@ import EmojiNatureIcon from "@atlaskit/icon/glyph/emoji/nature";
 import EmojiTravelIcon from "@atlaskit/icon/glyph/emoji/travel";
 
 const createItems = [
-    {
-        title: null,
-        items: [
-            ['/#event', 'Create Event', 'Create Event', CalendarIcon],
-            ['/#nature', 'Create Nature', 'Create Nature', EmojiNatureIcon],
-            ['/#idea', 'Create Idea', 'Create Idea', EmojiObjectsIcon],
-            ['/#travel', 'Create Travel Plans', 'Create Travel Plans', EmojiTravelIcon],
-        ],
-    },
-    {
-        title: 'Group with title',
-        items: [
-            ['/#branch',
-                <span>Create a <strong>Bitbucket branch</strong></span>, 'Bitbucket branch', BitbucketBranchesIcon],
-            ['/#page', <span>Create a <strong>Confluence page</strong></span>, 'Confluence page', PageIcon],
-        ],
-    },
+  {
+    title: null,
+    items: [
+      ['/#event', 'Create Event', 'Create Event', CalendarIcon],
+      ['/#nature', 'Create Nature', 'Create Nature', EmojiNatureIcon],
+      ['/#idea', 'Create Idea', 'Create Idea', EmojiObjectsIcon],
+      ['/#travel', 'Create Travel Plans', 'Create Travel Plans', EmojiTravelIcon],
+    ],
+  },
+  {
+    title: 'Group with title',
+    items: [
+      ['/#branch',
+        <span>Create a <strong>Bitbucket branch</strong></span>, 'Bitbucket branch', BitbucketBranchesIcon],
+      ['/#page', <span>Create a <strong>Confluence page</strong></span>, 'Confluence page', PageIcon],
+    ],
+  },
 ];
 
 export default class CreateDrawer extends PureComponent {
-    static propTypes = {
-        onItemClicked: PropTypes.func,
-    };
+  static propTypes = {
+    onItemClicked: PropTypes.func,
+  };
 
-    render() {
-        return (
-            <div>
+  render() {
+    return (
+      <div>
+        {
+          createItems.map(itemGroup => {
+            return (
+              <AkNavigationItemGroup key={itemGroup.title} title={itemGroup.title}>
                 {
-                    createItems.map(itemGroup => {
-                        return (
-                            <AkNavigationItemGroup key={itemGroup.title} title={itemGroup.title}>
-                                {
-                                    itemGroup.items.map(item => {
-                                        const [url, text, label, Icon] = item;
-                                        return (
-                                            <AkNavigationItem
-                                                key={url}
-                                                href={url}
-                                                icon={<Icon label={label}/>}
-                                                text={text.valueOf()}
-                                                onClick={this.props.onItemClicked}
-                                            />
-                                        );
-                                    })
-                                }
-                            </AkNavigationItemGroup>
-                        )
-                    })
+                  itemGroup.items.map(item => {
+                    const [url, text, label, Icon] = item;
+                    return (
+                      <AkNavigationItem
+                        key={url}
+                        href={url}
+                        icon={<Icon label={label}/>}
+                        text={text.valueOf()}
+                        onClick={this.props.onItemClicked}
+                      />
+                    );
+                  })
                 }
-            </div>
-        )
-    };
+              </AkNavigationItemGroup>
+            )
+          })
+        }
+      </div>
+    )
+  };
 }

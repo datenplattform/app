@@ -2,14 +2,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {Link} from 'react-router';
 import Navigation, {
-  AkGlobalItem, AkContainerTitle, AkCreateDrawer, AkNavigationItem, AkNavigationItemGroup,
+  AkContainerTitle, AkCreateDrawer, AkGlobalItem, AkNavigationItem, AkNavigationItemGroup,
   AkSearchDrawer,
 } from '@atlaskit/navigation';
 import Avatar from '@atlaskit/avatar';
 import AkDropdownMenu from '@atlaskit/dropdown-menu';
-import DashboardIcon from '@atlaskit/icon/glyph/dashboard';
 import PredictionsIcon from '@atlaskit/icon/glyph/bitbucket/pullrequests';
-import GearIcon from '@atlaskit/icon/glyph/settings';
+import PipelineIcon from '@atlaskit/icon/glyph/bitbucket/pipelines';
 import SearchIcon from '@atlaskit/icon/glyph/search';
 import CreateIcon from '@atlaskit/icon/glyph/add';
 
@@ -28,12 +27,7 @@ export default class StarterNavigation extends React.Component {
     navOpenState: PropTypes.object,
     router: PropTypes.object,
   };
-  state = {
-    navLinks: [
-      ['/', 'Startseite', DashboardIcon],
-      ['/settings', 'Einstellungen', GearIcon],
-    ]
-  };
+  state = {};
   openDrawer = (openDrawer) => {
     this.setState({openDrawer});
   };
@@ -80,18 +74,18 @@ export default class StarterNavigation extends React.Component {
           {
             heading: 'Luke Skywalker',
             items: [
-              { content: 'View profile' },
-              { content: 'Manage Atlassian account' },
-              { content: 'Bitbucket settings' },
-              { content: 'Integrations' },
-              { content: 'Bitbucket labs' },
-              { content: 'Log out' },
+              {content: 'View profile'},
+              {content: 'Manage Atlassian account'},
+              {content: 'Bitbucket settings'},
+              {content: 'Integrations'},
+              {content: 'Bitbucket labs'},
+              {content: 'Log out'},
             ],
           },
         ]}
       >
         <AkGlobalItem href="">
-          <Avatar size="medium" src={nucleusImage} />
+          <Avatar size="medium" src={nucleusImage}/>
         </AkGlobalItem>
       </AkDropdownMenu>
     );
@@ -102,7 +96,7 @@ export default class StarterNavigation extends React.Component {
         width={this.context.navOpenState.width}
         onResize={this.props.onNavResize}
         containerHeaderComponent={() => (
-          <AkContainerTitle icon={<img alt="nucleus" src={nucleusImage}/>} text="Datenplattform"/>
+          <AkContainerTitle icon={<img alt="nucleus" src={nucleusImage}/>} text="Datenplattform / Software Builder"/>
         )}
         globalPrimaryIcon={globalPrimaryIcon}
         globalPrimaryItemHref="/"
@@ -116,24 +110,11 @@ export default class StarterNavigation extends React.Component {
         onSearchDrawerOpen={() => this.openDrawer('search')}
         onCreateDrawerOpen={() => this.openDrawer('create')}
       >
-        <AkNavigationItemGroup title="default">
-          {
-            this.state.navLinks.map(link => {
-              const [url, title, Icon] = link;
-              return (
-                <Link key={url} to={url}>
-                  <AkNavigationItem
-                    icon={<Icon label={title} size="medium"/>}
-                    text={title}
-                    isSelected={this.context.router.isActive(url, true)}
-                  />
-                </Link>
-              );
-            }, this)
-          }
-        </AkNavigationItemGroup>
-
         <AkNavigationItemGroup title="Währungen">
+          <Link key="/currencies" to="/currencies">
+            <AkNavigationItem icon={<PipelineIcon label="Explorer" size="medium"/>} text="Explorer"
+                              isSelected={this.context.router.isActive("/currencies", true)}/>
+          </Link>
           <Link key="/currencies/bitcoin" to="/currencies/bitcoin">
             <AkNavigationItem icon={<PredictionsIcon label="Bitcoin" size="medium"/>} text="Bitcoin"
                               isSelected={this.context.router.isActive("/currencies/bitcoin", true)}/>
@@ -141,6 +122,52 @@ export default class StarterNavigation extends React.Component {
           <Link key="/currencies/ethereum" to="/currencies/ethereum">
             <AkNavigationItem icon={<PredictionsIcon label="Ethereum" size="medium"/>} text="Ethereum"
                               isSelected={this.context.router.isActive("/currencies/ethereum", true)}/>
+          </Link>
+          <Link key="/currencies/crypto-fond" to="/currencies/crypto-fond">
+            <AkNavigationItem icon={<PipelineIcon label="Crypto Fond" size="medium"/>} text="Crypto Fond"
+                              isSelected={this.context.router.isActive("/currencies/crypto-fond", true)}/>
+          </Link>
+        </AkNavigationItemGroup>
+
+        <AkNavigationItemGroup title="Maschinelles Lernen">
+          <Link key="/machine-learning" to="/machine-learning">
+            <AkNavigationItem icon={<PredictionsIcon label="Maschinelles Lernen" size="medium"/>}
+                              text="Maschinelles Lernen"
+                              isSelected={this.context.router.isActive("/machine-learning", true)}/>
+          </Link>
+          <Link key="/machine-learning/model-editor" to="/machine-learning/model-editor">
+            <AkNavigationItem icon={<PredictionsIcon label="Modell Editor" size="medium"/>}
+                              text="Modell Editor"
+                              isSelected={this.context.router.isActive("/machine-learning/model-editor", true)}/>
+          </Link>
+          <Link key="/machine-learning/converter" to="/machine-learning/converter">
+            <AkNavigationItem icon={<PredictionsIcon label="Bildschirmfoto-Quellcode-Converter" size="medium"/>}
+                              text="Bildschirmfoto-Quellcode-Converter"
+                              isSelected={this.context.router.isActive("/machine-learning/model-editor", true)}/>
+          </Link>
+        </AkNavigationItemGroup>
+
+        <AkNavigationItemGroup title="Maschinelles Sehen">
+          <Link key="/machine-learning" to="/machine-vision">
+            <AkNavigationItem icon={<PredictionsIcon label="Maschinelles Sehen" size="medium"/>}
+                              text="Maschinelles Sehen"
+                              isSelected={this.context.router.isActive("/machine-vision", true)}/>
+          </Link>
+        </AkNavigationItemGroup>
+
+        <AkNavigationItemGroup title="Datenströme">
+          <Link key="/data/videos" to="/data/videos">
+            <AkNavigationItem icon={<PredictionsIcon label="Videos" size="medium"/>}
+                              text="Videos"
+                              isSelected={this.context.router.isActive("/data/videos", true)}/>
+          </Link>
+        </AkNavigationItemGroup>
+
+        <AkNavigationItemGroup title="Quanten">
+          <Link key="/quantum" to="/quantum">
+            <AkNavigationItem icon={<PredictionsIcon label="Quanten" size="medium"/>}
+                              text="Quanten"
+                              isSelected={this.context.router.isActive("/machine-vision", true)}/>
           </Link>
         </AkNavigationItemGroup>
       </Navigation>
